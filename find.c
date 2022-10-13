@@ -11,12 +11,12 @@ char* strstr_fully_matched(char* haystack, char* needle){
 	padded_needle[strlen(needle) + 1] = ' ';
 	padded_needle[strlen(needle) + 2] = '\0';
 	if(!strncmp(haystack, padded_needle + 1, strlen(needle) + 1))
-		return haystack;//needle is at the beginning
+		return haystack;
 	if((rv = strstr(haystack, padded_needle)) != NULL)
-		return rv + 1;//needle is at the middle.
+		return rv + 1;
 	padded_needle[strlen(needle) + 1] = '\0';
 	if((rv = strstr(haystack, padded_needle)) != NULL)
-		return rv + 1;//needle is at the end.
+		return rv + 1;
 }
 int getline2(char s[], int lim){
 	int c, i;
@@ -45,8 +45,7 @@ int readlines(char** lineptr, int maxlines){
 		}
 	return nlines;
 }
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
     int except = 0;//0 or 1
 	int sorted = 0;//0 or 1
 	int reversed = 0;//0 or 1

@@ -1,13 +1,13 @@
-#include <find.h>
+#include "find.h"
 
 void reverse(char* v[], int no_of_results) {
 	char* temp;
-	int i, j;
-
-	for (i = 0, j = no_of_results - 1; i < j; i++, j--) {
-		temp = v[i];
-		v[i] = v[j];
-		v[j] = temp;
+	int end = no_of_results-1;
+	for (int start = 0; start < end; start++) {
+	    temp = v[start];
+	    v[start] = v[end];
+	    v[end] = temp;
+	    end--;
 	}
 }
 
@@ -19,7 +19,7 @@ void swap(char* v[], int i, int j) {
 	v[j] = temp;
 }
 
-void quicksort(char* v[], int left, int right) {
+void quickSort(char* v[], int left, int right) {
 	int i, last;
 	void swap(char* v[], int i, int j);
 
@@ -34,8 +34,8 @@ void quicksort(char* v[], int left, int right) {
 			swap(v, ++last, i);
 
 	swap(v, left, last);
-	quicksort(v, left, last - 1);
-	quicksort(v, last + 1, right);
+	quickSort(v, left, last - 1);
+	quickSort(v, last + 1, right);
 }
 
 void print_results(char* pattern, int matched, int first_occurrence, int numbered, int sorted, int partial, int reversed, int ignore_case, int no_of_results) {
@@ -46,7 +46,7 @@ void print_results(char* pattern, int matched, int first_occurrence, int numbere
 	}
 	
 	if (sorted) {
-		quicksort(sentences, 0, no_of_results - 1);
+		quickSort(sentences, 0, no_of_results - 1);
 	}else if (reversed) {
 		reverse(sentences, no_of_results);
 	}

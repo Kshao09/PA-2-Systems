@@ -1,4 +1,8 @@
-#include <find.h>
+#include "find.h"
+#include<string.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<ctype.h>
 
 #define MAX_LINES 1000
 #define MAX_LEN 1000
@@ -6,24 +10,31 @@
 char* lineptr[MAX_LINES];
 int results[MAX_LINES];
 
-char* strstr_fully_matched(char* haystack, char* needle) {
-	char* rv;
-	char padded_needle[strlen(needle) + 3];
-	padded_needle[0] = ' ';
-	strcpy(padded_needle + 1, needle);
-	padded_needle[strlen(needle) + 1] = ' ';
-	padded_needle[strlen(needle) + 2] = '\0';
-	
-	if (!strncmp(haystack, padded_needle + 1, strlen(needle) + 1))
-		return haystack;//needle is at the beginning
-	
-	if ((rv = strstr(haystack, padded_needle)) != NULL)
-		return rv + 1;//needle is at the middle.
-	
-	padded_needle[strlen(needle) + 1] = '\0';
-	
-	if ((rv = strstr(haystack, padded_needle)) != NULL)
-		return rv + 1;//needle is at the end.
+char* str_tolower(char* input){
+    char* rv = strdup(input);
+    for(int i = 0; i < strlen(rv);i++)
+        rv[i] = tolower(rv[i]);
+    return rv;
+}
+char *strstr_fully_matched(char *haystack, char *needle) {
+  char *rv;
+  char padded_needle[strlen(needle) + 3];
+  padded_needle[0] = ' ';
+  strcpy(padded_needle + 1, needle);
+  padded_needle[strlen(needle) + 1] = ' ';
+  padded_needle[strlen(needle) + 2] = '\0';
+  if (!strncmp(haystack, padded_needle + 1, strlen(needle) + 1)) {
+    return haystack; // needle is at the beginning
+  }
+  if ((rv = strstr(haystack, padded_needle)) != NULL) {
+    return rv + 1; // needle is at the middle.
+  }
+  padded_needle[strlen(needle) + 1] = '\0';
+  if ((rv = strstr(haystack, padded_needle)) != NULL &&
+      rv[strlen(padded_needle)] == '\0') {
+    return rv + 1; // needle is at the end.
+  }
+  return NULL;
 }
 
 int getline2(char s[], int lim) {
@@ -58,8 +69,7 @@ int readlines(char** lineptr, int maxlines) {
 	return nlines;
 }
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
     int except = 0;//0 or 1
 	int sorted = 0;//0 or 1
 	int reversed = 0;//0 or 1
@@ -69,9 +79,7 @@ int main(int argc, char** argv)
 	int matched = 0;//0 or 1
 	int ignore_case = 0;//0 or 1
 	char* pattern = "";
-	//....
-	//handle command line arguments...
-	//similar to #41 of Chapter 5 partII.pptx
+
 	int current_char;
 	
 	if (argc == 3) {

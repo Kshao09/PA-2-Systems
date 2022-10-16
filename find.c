@@ -139,6 +139,11 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 	
+	if (except && partial) {
+	    printf("find: Illegal usage. -x and -p can't be used together\n");
+	    return 0;
+	}
+	
 	int nlines = readlines(lineptr, MAX_LINES);//similar, but not the same as the slide #23 of Chapter 5 partII.pptx
 	int no_of_results = 0;
 	

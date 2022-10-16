@@ -47,21 +47,34 @@ void print_results(char* pattern, int matched, int first_occurrence, int numbere
 	
 	if (sorted) {
 		quickSort(sentences, 0, no_of_results - 1);
-	}else if (reversed) {
+	} else if (reversed) {
 		reverse(sentences, no_of_results);
 	}
 
 	printf("\n\n");
 	
 	for (int i = 0; i < no_of_results; i++) {
-		if (numbered)
+		if (numbered) {
 			printf("%d. ", results[i] + 1); 
-		if (first_occurrence)
-			if (matched)
-				printf("@%d: ", strstr_fully_matched(sentences[i], pattern) - sentences[i]);
-			else
-				printf("@%d: ", strstr(sentences[i], pattern) - sentences[i]);
+		}
 		
+		if (first_occurrence) {
+			if (matched) {
+				printf("@%d: ", strstr_fully_matched(sentences[i], pattern) - sentences[i]);
+			} else
+				printf("@%d: ", strstr(sentences[i], pattern) - sentences[i]);
+		}
+		
+		if (partial) {
+		    char * lastWord = strcpy(lastWord, &sentences[strlen(sentences)-5]);
+		    char * firstWord = strcpy(firstWord, &sentences[10]);
+		    
+		    if (strstr(sentences, pattern)) {
+		        printf("%s\n", firstWord + " " + pattern + "..." + lastWord);
+		    }
+		    printf("%s\n", firstWord + "..." + pattern + "..." + lastWord);
+		    
+		}
 		printf("%s\n", sentences[i]);
 	}
 }

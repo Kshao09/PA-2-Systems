@@ -66,14 +66,14 @@ void print_results(char* pattern, int matched, int first_occurrence, int numbere
 		}
 		
 		if (partial) {
-		    char * lastWord = strcpy(lastWord, &sentences[strlen(sentences)-5]);
-		    char * firstWord = strcpy(firstWord, &sentences[10]);
+		    char* lastWord = strcpy(lastWord, lineptr[results[strlen(lineptr[results[i]])-5]]);
+		    char* firstWord = strcpy(firstWord, lineptr[results[10]]);
 		    
-		    if (strstr(sentences, pattern)) {
-		        printf("%s\n", firstWord + " " + pattern + "..." + lastWord);
+		    if (strstr_fully_matched(lineptr[results[i]], pattern)) {
+		        printf("%s %s...%s\n",firstWord, pattern, lastWord);
+		    } else {
+		        printf("%s...%s...%s\n", firstWord, pattern, lastWord);
 		    }
-		    printf("%s\n", firstWord + "..." + pattern + "..." + lastWord);
-		    
 		}
 		printf("%s\n", sentences[i]);
 	}

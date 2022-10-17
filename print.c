@@ -63,15 +63,15 @@ void print_results(char* pattern, int matched, int first_occurrence, int numbere
 
                 if (matched) {
                     if (ignore_case) {
-                        chartoLow2 = str_tolower(sentences[i]);
-                        index = (int) (strstr_fully_matched(toLow2, str_tolower(pattern)) - toLow2);
+                        char toLow = str_tolower(sentences[i]);
+                        index = (int) (strstr_fully_matched(toLow, str_tolower(pattern)) - toLow);
                     } else {
                         index = (int) (strstr_fully_matched(sentences[i], pattern) - sentences[i]);
                     }
                 } else {
                     if (ignore_case) {
-                        char *toLow2 = str_tolower(sentences[i]);
-                        index = (int) (strstr(toLow2, str_tolower(pattern)) - toLow2);
+                        char *toLowTwo = str_tolower(sentences[i]);
+                        index = (int) (strstr(toLowTwo, str_tolower(pattern)) - toLowTwo);
                     } else {
                         index = (int) (strstr(sentences[i], pattern) - sentences[i]);
 
@@ -89,7 +89,7 @@ void print_results(char* pattern, int matched, int first_occurrence, int numbere
                     printf("%.s...%s %.s\n", 10, word, pattern, 5, word + (word_len - 5));
                 }
                 else{
-                    printf("%.s...%s...%.s\n", 10, word, pattern, 5, word +(word_len-5));
+                    printf("%.s...%s...%.s\n", 10, word, pattern, 5, word +(word-5));
                 }
 
             } if(!partial) {

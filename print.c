@@ -1,5 +1,23 @@
 #include "find.h"
 
+int ignore_white_space(char* str){
+    int count = 0;
+    int len_str = strlen(str);
+    for(int i =0; i <len_str; i++){
+        if (str[i] != ' ')
+            count++;
+    }
+    return count;
+}
+int white_space(char* str){
+    int count = 0;
+    int len_str = strlen(str);
+    for(int i =0; i <len_str; i++){
+        if (str[i] == ' ')
+            count++;
+    }
+    return count;
+}
 void reverse(char* v[], int no_of_results) {
   char *temp;
   int i, j;
@@ -30,71 +48,64 @@ void quickSort(char* v[], int left, int right) {
 	quickSort(v, last + 1, right);
 }
 
-void print_results(char* pattern, int matched, int first_occurrence, int numbered, int sorted, int partial, int reversed, int ignore_case, int no_of_results) {
-	char** sentences = (char**) malloc(no_of_results * sizeof(char*));
-	
-	for (int i = 0; i < no_of_results; i++) {
-		sentences[i] = strdup(lineptr[results[i]]);
-	}
-	if(sorted){
-    quickSort(sentences, 0, no_of_results -1); //calling qsort on sentences
-	} else if (reversed) {
-      reverse(sentences, no_of_results*sizeof(char)); //reverse on sentences
-	}
-	printf("\n\n");
-	
-	for (int i = 0; i < no_of_results; i++) {
-		if (numbered) {
-			printf("%d. ", results[i] + 1); 
-		}
-		
-		if (first_occurrence) {
-			if (matched) {
-				printf("@%d: ", strstr_fully_matched(sentences[i], pattern) - sentences[i]);
-			} else
-				printf("@%d: ", strstr(sentences[i], pattern) - sentences[i]);
-		}
-		
-		if(partial) {
-                int index;
-                char word = sentences[i];
-                int word_len = strlen(word);
-                int length_of_pattern = strlen(pattern);
-
-                if (matched) {
-                    if (ignore_case) {
-                        char toLow = str_tolower(sentences[i]);
-                        index = (int) (strstr_fully_matched(toLow, str_tolower(pattern)) - toLow);
-                    } else {
-                        index = (int) (strstr_fully_matched(sentences[i], pattern) - sentences[i]);
-                    }
-                } else {
-                    if (ignore_case) {
-                        char *toLowTwo = str_tolower(sentences[i]);
-                        index = (int) (strstr(toLowTwo, str_tolower(pattern)) - toLowTwo);
-                    } else {
-                        index = (int) (strstr(sentences[i], pattern) - sentences[i]);
-
-                    }
+void print_results(char* pattern, int matched, int first_occurrence, int numbered, int sorted, int partial, int reversed,int case_ignore, int no_of_results){
+    char** sentences = (char**)malloc(no_of_results*sizeof(char*));
+    for(int i = 0; i < no_of_results; i++){
+        sentences[i] = strdup(lineptr[results[i]]);
+    }
+    if(sorted){
+        quickSort(sentences,0,no_of_results-1);
+    }else if (reversed){
+        reverse(sentences, no_of_results);
+    }
+    for(int i = 0; i < no_of_results; i++) {
+        if (numbered)
+            printf("@%d. ", results[i] + 1);
+        if (first_occurrence) {
+            if (matched) {
+                if(case_ignore){
+                    char* haystack_lower = str_tolower(sentences[i]);
+                    char* needle_lower = str_tolower(pattern);
+                    printf("@%ld. ", strstr_fully_matched(haystack_lower, needle_lower) - haystack_lower);
+                }else
+                    printf("@%ld. ", strstr_fully_matched(sentences[i], pattern) - sentences[i]);
+            }else
+                if (case_ignore){
+                    char* haystack_lower = str_tolower(sentences[i]);
+                    char* needle_lower = str_tolower(pattern);
+                    printf("@%ld. ", strstr(haystack_lower, needle_lower) - haystack_lower);
+                }else
+                    printf("@%ld. ", strstr(sentences[i], pattern) - sentences[i]);
+        }
+        if(partial){
+            long index;
+            char* word = sentences[i];
+            int word_len = ignore_white_space(word);
+            int needle_len = strlen(pattern);
+            if (matched) {
+                if(case_ignore){
+                    char* haystack_lower = str_tolower(sentences[i]);
+                    index = strstr_fully_matched(haystack_lower,str_tolower(pattern)) - haystack_lower;
+                }else{
+                    index = strstr_fully_matched(sentences[i],pattern) - sentences[i];
                 }
-
-				if (word_len <= length_of_pattern + 15) {
-                    printf("%s\n", sentences[i]);
-                } else if (index < 10) {
-                    printf("%.s %s...%.s\n", 10, word, pattern, 5, word + (word_len - 5));
-                } else if (matched && index + length_of_pattern >= word_len - 5 && index > 10) {
-                    printf("%.s...%s %.s\n", 10, word, pattern, 5, word + (word_len - 5));
+            }else{
+                if(case_ignore){
+                    char* haystack_lower = str_tolower(sentences[i]);
+                    index = strstr(haystack_lower,str_tolower(pattern)) - haystack_lower;
+                }else{
+                    index = strstr(sentences[i],pattern) - sentences[i];
                 }
-                else if (index + length_of_pattern-1 >= word_len - 5 && index > 10) {
-                    printf("%.s...%s %.s\n", 10, word, pattern, 5, word + (word_len - 5));
-                }
-                else{
-                    printf("%.s...%s...%.s\n", 10, word, pattern, 5, word +(word-5));
-                }
-
-            } if(!partial) {
-                printf("%s\n", sentences[i]);
             }
-		printf("%s\n", sentences[i]);
-	}
+            if (index < 10 && word_len > 15)
+                printf("%.*s %s...%.*s\n",10, word, pattern,5, word + (word_len-5));
+            else if (index > word_len-5 && word_len > 15)
+                printf("%.*s...%s %.*s\n",10, word, pattern,5, word + (word_len + white_space(word)-5));
+            else if(word_len < (needle_len + 15))
+                printf("%s\n",sentences[i]);
+            else
+                printf("%.*s...%s...%.*s\n", 10,word, pattern,5, word + (word_len + white_space(word)-5));
+        }else
+            printf("%s\n", sentences[i]);
+    }
 }

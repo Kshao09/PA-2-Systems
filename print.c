@@ -38,13 +38,12 @@ void print_results(char* pattern, int matched, int first_occurrence, int numbere
 	}
 	if(sorted){
     quickSort(sentences, 0, no_of_results -1); //calling qsort on sentences
-  } else if (reversed) {
+	} else if (reversed) {
       reverse(sentences, no_of_results*sizeof(char)); //reverse on sentences
-  }
+	}
 	printf("\n\n");
 	
 	for (int i = 0; i < no_of_results; i++) {
-		
 		if (numbered) {
 			printf("%d. ", results[i] + 1); 
 		}
@@ -56,20 +55,46 @@ void print_results(char* pattern, int matched, int first_occurrence, int numbere
 				printf("@%d: ", strstr(sentences[i], pattern) - sentences[i]);
 		}
 		
-		if (partial) {
-		    if (!matched) {
-			    int lineLen = sizeof(lineptr[results[i]]);
-			    if (strstr(lineptr[results[i]], pattern)) {
-				printf("%.*s...s...%.*s\n", lineptr[results[i]], pattern, 5, lineptr[results[i]] + (lineLen -5);
-			    }
-	            } else if (matched) {
-			    if (strstr_fully_matched(lineptr[results[i]], pattern)) {
-				printf("%.*s s...%.*s\n", 10, lineptr[results[i]], pattern, 5, lineptr[results[i]] + (lineLen - 5);
-			    } else {
-				printf("%.*s...s...%.*s\n", lineptr[results[i]], pattern, 5, lineptr[results[i]] + (lineLen -5);
-			    }
-	            }
-		}
+		if(partial) {
+                int index;
+                char word = sentences[i];
+                int word_len = strlen(word);
+                int length_of_pattern = strlen(pattern);
+
+                if (matched) {
+                    if (ignore_case) {
+                        chartoLow2 = str_tolower(sentences[i]);
+                        index = (int) (strstr_fully_matched(toLow2, str_tolower(pattern)) - toLow2);
+                    } else {
+                        index = (int) (strstr_fully_matched(sentences[i], pattern) - sentences[i]);
+                    }
+                } else {
+                    if (ignore_case) {
+                        char *toLow2 = str_tolower(sentences[i]);
+                        index = (int) (strstr(toLow2, str_tolower(pattern)) - toLow2);
+                    } else {
+                        index = (int) (strstr(sentences[i], pattern) - sentences[i]);
+
+                    }
+                }
+
+				if (word_len <= length_of_pattern + 15) {
+                    printf("%s\n", sentences[i]);
+                } else if (index < 10) {
+                    printf("%.s %s...%.s\n", 10, word, pattern, 5, word + (word_len - 5));
+                } else if (matched && index + length_of_pattern >= word_len - 5 && index > 10) {
+                    printf("%.s...%s %.s\n", 10, word, pattern, 5, word + (word_len - 5));
+                }
+                else if (index + length_of_pattern-1 >= word_len - 5 && index > 10) {
+                    printf("%.s...%s %.s\n", 10, word, pattern, 5, word + (word_len - 5));
+                }
+                else{
+                    printf("%.s...%s...%.s\n", 10, word, pattern, 5, word +(word_len-5));
+                }
+
+            } if(!partial) {
+                printf("%s\n", sentences[i]);
+            }
 		printf("%s\n", sentences[i]);
 	}
 }

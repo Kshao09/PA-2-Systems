@@ -10,6 +10,13 @@
 char* lineptr[MAX_LINES];
 int results[MAX_LINES];
 
+char* str_tolower(char* input){
+    char* rv = strdup(input);
+    for(int i = 0; i < strlen(rv);i++)
+        rv[i] = tolower(rv[i]);
+    return rv;
+}
+
 char *strstr_fully_matched(char *haystack, char *needle) {
   char *rv;
   char padded_needle[strlen(needle) + 3];

@@ -1,14 +1,13 @@
 #include "find.h"
 
 void reverse(char* v[], int no_of_results) {
-	char* temp;
-	int end = no_of_results-1;
-	for (int start = 0; start < end; start++) {
-	    temp = v[start];
-	    v[start] = v[end];
-	    v[end] = temp;
-	    end--;
-	}
+  char *temp;
+  int i, j;
+  for(i=0,j= no_of_results -1; i<j; i++, j--){
+    temp = v[i];
+    v[i]= v[j];
+    v[j]= temp;
+  }
 }
 
 void swap(char* v[], int i, int j) {
@@ -25,13 +24,6 @@ void quickSort(char* v[], int left, int right) {
 
 	if (left >= right)
 		return;
-	
-	swap(v, left, (left + right)/2);
-	last = left;
-
-	for (i = left + 1; i <= right; i++)
-		if (strcmp(v[i], v[left]) < 0)
-			swap(v, ++last, i);
 
 	swap(v, left, last);
 	quickSort(v, left, last - 1);
@@ -44,13 +36,11 @@ void print_results(char* pattern, int matched, int first_occurrence, int numbere
 	for (int i = 0; i < no_of_results; i++) {
 		sentences[i] = strdup(lineptr[results[i]]);
 	}
-	
-	if (sorted) {
-		quickSort(sentences, 0, no_of_results - 1);
-	} else if (reversed) {
-		reverse(sentences, no_of_results);
-	}
-
+	if(sorted){
+    quickSort(sentences, 0, no_of_results -1); //calling qsort on sentences
+  } else if (reversed) {
+      reverse(sentences, no_of_results*sizeof(char)); //reverse on sentences
+  }
 	printf("\n\n");
 	
 	for (int i = 0; i < no_of_results; i++) {

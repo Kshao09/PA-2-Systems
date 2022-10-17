@@ -44,6 +44,7 @@ void print_results(char* pattern, int matched, int first_occurrence, int numbere
 	printf("\n\n");
 	
 	for (int i = 0; i < no_of_results; i++) {
+		
 		if (numbered) {
 			printf("%d. ", results[i] + 1); 
 		}
@@ -56,14 +57,18 @@ void print_results(char* pattern, int matched, int first_occurrence, int numbere
 		}
 		
 		if (partial) {
-		    char* lastWord = strcpy(lastWord, lineptr[results[strlen(lineptr[results[i]])-5]]);
-		    char* firstWord = strcpy(firstWord, lineptr[results[10]]);
-		    
-		    if (strstr_fully_matched(lineptr[results[i]], pattern)) {
-		        printf("%s %s...%s\n",firstWord, pattern, lastWord);
-		    } else {
-		        printf("%s...%s...%s\n", firstWord, pattern, lastWord);
-		    }
+		    if (!matched) {
+			    int lineLen = sizeof(lineptr[results[i]]);
+			    if (strstr(lineptr[results[i]], pattern)) {
+				printf("%.*s...s...%.*s\n", lineptr[results[i]], pattern, 5, lineptr[results[i]] + (lineLen -5);
+			    }
+	            } else if (matched) {
+			    if (strstr_fully_matched(lineptr[results[i]], pattern)) {
+				printf("%.*s s...%.*s\n", 10, lineptr[results[i]], pattern, 5, lineptr[results[i]] + (lineLen - 5);
+			    } else {
+				printf("%.*s...s...%.*s\n", lineptr[results[i]], pattern, 5, lineptr[results[i]] + (lineLen -5);
+			    }
+	            }
 		}
 		printf("%s\n", sentences[i]);
 	}

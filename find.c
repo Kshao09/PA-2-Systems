@@ -11,10 +11,10 @@ char* lineptr[MAX_LINES];
 int results[MAX_LINES];
 
 char* str_tolower(char* input){
-    char* rv = strdup(input);
-    for(int i = 0; i < strlen(rv);i++)
-        rv[i] = tolower(rv[i]);
-    return rv;
+  char* rv = strdup(input);
+  for(int i = 0; i < strlen(rv);i++)
+    rv[i] = tolower(rv[i]);
+  return rv;
 }
 
 char *strstr_fully_matched(char *haystack, char *needle) {
@@ -43,13 +43,11 @@ int getline2(char s[], int lim) {
 	
 	for(i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; i++)
 		s[i] = c;
-	if(c == '\n'){
+	  if(c == '\n'){
 		s[i] = c;
 		i++;
 	}
-	
 	s[i] = '\0';
-	
 	return i;
 }
 
@@ -114,15 +112,10 @@ int main(int argc, char** argv) {
 					return 0;
 					break;
 			}
-    }
+		}
 	}
-	// if (++argv) {
- //    pattern = argv[0];
-	// } else {
-	// 	printf("Pattern missing.");
-	// 	return 0;
-	// }
-	if (sorted && reversed) {
+
+  if (sorted && reversed) {
 		printf("find: Illegal usage. -s and -r can't be used together\n");
 		return 0;
 	}
@@ -133,12 +126,12 @@ int main(int argc, char** argv) {
 	}
 	
 	if (except && partial) {
-	    printf("find: Illegal usage. -x and -p can't be used together\n");
-	    return 0;
+	  printf("find: Illegal usage. -x and -p can't be used together\n");
+	  return 0;
 	}
-
-  char* pattern = *argv;
-	int nlines = readlines(lineptr, MAX_LINES);//similar, but not the same as the slide #23 of Chapter 5 partII.pptx
+  
+	char* pattern = *argv;
+	int nlines = readlines(lineptr, MAX_LINES);
 	int no_of_results = 0;
 	
 	for(int i = 0; i < nlines; i++) {
@@ -151,5 +144,5 @@ int main(int argc, char** argv) {
 		}
 	}
 	print_results(pattern, matched, first_occurrence, numbered, sorted, partial, reversed, ignore_case, no_of_results);
-  return 0;
+	return 0;
 }
